@@ -1,4 +1,4 @@
-package proyecto.api;
+package boosterm.backend.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

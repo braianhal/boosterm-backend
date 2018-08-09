@@ -1,4 +1,4 @@
-package proyecto;
+package boosterm.backend;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
