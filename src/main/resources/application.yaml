@@ -1,1 +1,3 @@
 server.port: 5000
+
+api.news.api_key: 4d82582f350b40e0abe64ae1ce1dc7ef
