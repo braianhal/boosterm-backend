@@ -1,3 +1,9 @@
 server.port: 5000
 
-api.news.api_key: 4d82582f350b40e0abe64ae1ce1dc7ef
+api:
+  news:
+    key: 4d82582f350b40e0abe64ae1ce1dc7ef
+  meaning_cloud:
+    key: 9cdf55788ac78ce72ea0443fe967e687
+    url:
+      sentiment: https://api.meaningcloud.com/sentiment-2.1

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GoogleNewsClient {
 
-    @Value("${api.news.api_key}")
+    @Value("${api.news.key}")
     private String apiKey;
 
     private static String DEFAULT_LANGUAGE = "es";
