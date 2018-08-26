@@ -1,4 +1,5 @@
-server.port: 5000
+server:
+  port: 5000
 
 api:
   news:
@@ -7,3 +8,9 @@ api:
     key: 9cdf55788ac78ce72ea0443fe967e687
     url:
       sentiment: https://api.meaningcloud.com/sentiment-2.1
+
+redis:
+  url:
+    dev: localhost
+    prod: redis-db.q9kj5l.0001.use2.cache.amazonaws.com
+  port: 6379
