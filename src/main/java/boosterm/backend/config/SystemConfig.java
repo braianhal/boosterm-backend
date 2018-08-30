@@ -1,4 +1,4 @@
-package boosterm.backend.utils;
+package boosterm.backend.config;
 
 import java.util.Objects;
 
