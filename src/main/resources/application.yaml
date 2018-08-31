@@ -8,6 +8,11 @@ api:
     key: 9cdf55788ac78ce72ea0443fe967e687
     url:
       sentiment: https://api.meaningcloud.com/sentiment-2.1
+  twitter:
+    key: CYKd9FMEgIA5YGAg2VU6uj9df
+    key_secret: pwL9psnBpm0Zfonattr9Wrrv6v0zLaVVoqSSMSmFLKYux8g6Md
+    access_token: 211355327-SxrQxOcSbeepOlFAOSw1rCtE2kbVwiGXKXVuwRYv
+    access_token_secret: EIkx0da2ESCXPR1TtKMUeerx7z7S6IUHCuCKqgAK6BRcd
 
 redis:
   url:
