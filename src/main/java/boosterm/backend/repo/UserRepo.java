@@ -15,14 +15,14 @@ public class UserRepo implements RedisRepo<User> {
     @Autowired
     public Jedis redis;
 
-    private static String KEY_FORMAT = "user:%s";
+    private static String USER_KEY_FORMAT = "user:%s";
 
     public User get(String email) {
-        return gson.fromJson(redis.get(getKey(KEY_FORMAT, email)), User.class);
+        return gson.fromJson(redis.get(getKey(USER_KEY_FORMAT, email)), User.class);
     }
 
     public void save(User user) {
-        redis.set(getKey(KEY_FORMAT, user.getEmail()), gson.toJson(user));
+        redis.set(getKey(USER_KEY_FORMAT, user.getEmail()), gson.toJson(user));
     }
 
 }

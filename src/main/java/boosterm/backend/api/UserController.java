@@ -2,6 +2,7 @@ package boosterm.backend.api;
 
 import boosterm.backend.api.request.UserRequest;
 import boosterm.backend.api.response.UserResponse;
+import boosterm.backend.domain.User;
 import boosterm.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,17 @@ public class UserController {
 
     @GetMapping("/{email}")
     public UserResponse getUser(@PathVariable String email) {
-        return new UserResponse(userService.getUser(email));
+        return new UserResponse(getUserByEmail(email));
+    }
+
+    // Auxiliary
+
+    private User getUserByEmail(String email) {
+        User user = userService.getUser(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return user;
     }
 
 }
