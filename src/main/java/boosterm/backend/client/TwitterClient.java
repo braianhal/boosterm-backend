@@ -1,13 +1,20 @@
 package boosterm.backend.client;
 
+import boosterm.backend.domain.Tweet;
+import boosterm.backend.utils.Converter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static boosterm.backend.config.SystemConfig.DEFAULT_TIMEZONE;
+import static boosterm.backend.utils.Converter.toLocalDateTime;
+import static java.util.stream.Collectors.toList;
+import static twitter4j.Query.ResultType.popular;
 
 @Service
 public class TwitterClient {
@@ -26,6 +33,8 @@ public class TwitterClient {
 
     private Twitter twitter;
 
+    private static String DATE_LIMIT_FORMAT = "yyyy-MM-dd";
+
     @PostConstruct
     private void init() {
         ConfigurationBuilder cb = new ConfigurationBuilder()
@@ -37,12 +46,19 @@ public class TwitterClient {
         twitter = tf.getInstance();
     }
 
-    public List<String> test(String text) throws TwitterException {
+    public List<Tweet> searchRelevantTweets(String text, String language, LocalDateTime limitFrom, int quantity) throws TwitterException {
         Query query = new Query(text);
-        QueryResult result = twitter.search(query);
-        return result.getTweets().stream()
-                .map(Status::getText)
-                .collect(Collectors.toList());
+        query.setCount(quantity);
+        query.setLang(language);
+        query.setSince(Converter.toString(limitFrom, DATE_LIMIT_FORMAT));
+        query.setResultType(popular);
+        return twitter.search(query).getTweets().stream().map(TwitterClient::toTweet).collect(toList());
+    }
+
+    private static Tweet toTweet(Status tweetData) {
+        return new Tweet(tweetData.getUser().getScreenName(), tweetData.getText(),
+                toLocalDateTime(tweetData.getCreatedAt(), DEFAULT_TIMEZONE),
+                tweetData.getRetweetCount(), tweetData.getFavoriteCount());
     }
 
 }

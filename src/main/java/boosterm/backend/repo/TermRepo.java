@@ -9,7 +9,8 @@ import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class TermRepo implements RedisRepo<Term> {
@@ -30,8 +31,7 @@ public class TermRepo implements RedisRepo<Term> {
 
     public List<Term> getAll(User user) {
         Set<String> terms = redis.smembers(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()));
-        return terms.stream().map(term -> get(user, term)
-        ).collect(Collectors.toList());
+        return terms.stream().map(term -> get(user, term)).collect(toList());
     }
 
     public void save(User user, Term term) {

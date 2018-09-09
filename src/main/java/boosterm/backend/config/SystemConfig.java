@@ -8,4 +8,6 @@ public class SystemConfig {
         return Objects.equals(System.getenv("ENV"), "PROD");
     }
 
+    public static String DEFAULT_TIMEZONE = "UTC";
+
 }
