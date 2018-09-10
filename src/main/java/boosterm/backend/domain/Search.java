@@ -1,5 +1,8 @@
 package boosterm.backend.domain;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Search {
 
     private String term;
@@ -24,6 +27,14 @@ public class Search {
 
     public CustomDuration getTimeLimit() {
         return timeLimit;
+    }
+
+    public LocalDateTime sinceDate(LocalDateTime now) {
+        return now.minus(timeLimit.getAmount(), timeLimit.getUnit());
+    }
+
+    public LocalDate sinceDate(LocalDate now) {
+        return now.minus(timeLimit.getAmount(), timeLimit.getUnit());
     }
 
 }

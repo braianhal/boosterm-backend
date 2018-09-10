@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import twitter4j.TwitterException;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,6 +35,19 @@ public class GraphController {
             return service.getTweetFeed(search).stream().map(TweetResponse::new).collect(toList());
         } catch (TwitterException e) {
             throw new RuntimeException("Can't retrieve tweets");
+        }
+    }
+
+    @GetMapping("/popularity/tweets")
+    public Map<LocalDate, Integer> getPopularityInTimeForTweets(@RequestParam String term,
+                                                                @RequestParam String lang,
+                                                                @RequestParam(name = "limit_amount") int limitAmount,
+                                                                @RequestParam(name = "limit_type") String limitType) {
+        Search search = new Search(term, lang, new CustomDuration(limitAmount, ChronoUnit.valueOf(limitType)));
+        try {
+            return service.getPopularityValueInTimeForTweets(search);
+        } catch (TwitterException e) {
+            throw new RuntimeException("Can't retrieve data");
         }
     }
 

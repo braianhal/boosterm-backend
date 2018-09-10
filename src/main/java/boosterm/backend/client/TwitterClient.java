@@ -46,11 +46,12 @@ public class TwitterClient {
         twitter = tf.getInstance();
     }
 
-    public List<Tweet> searchRelevantTweets(String text, String language, LocalDateTime limitFrom, int quantity) throws TwitterException {
+    public List<Tweet> searchRelevantTweets(String text, String language, LocalDateTime limitSince, LocalDateTime limitTo, int quantity) throws TwitterException {
         Query query = new Query(text);
         query.setCount(quantity);
         query.setLang(language);
-        query.setSince(Converter.toString(limitFrom, DATE_LIMIT_FORMAT));
+        query.setSince(Converter.toString(limitSince, DATE_LIMIT_FORMAT));
+        query.setUntil(Converter.toString(limitTo, DATE_LIMIT_FORMAT));
         query.setResultType(popular);
         return twitter.search(query).getTweets().stream().map(TwitterClient::toTweet).collect(toList());
     }
