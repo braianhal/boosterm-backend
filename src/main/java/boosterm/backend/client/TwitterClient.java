@@ -57,7 +57,7 @@ public class TwitterClient {
     }
 
     private static Tweet toTweet(Status tweetData) {
-        return new Tweet(tweetData.getUser().getScreenName(), tweetData.getText(),
+        return new Tweet(tweetData.getId(), tweetData.getUser().getScreenName(), tweetData.getText(),
                 toLocalDateTime(tweetData.getCreatedAt(), DEFAULT_TIMEZONE),
                 tweetData.getRetweetCount(), tweetData.getFavoriteCount());
     }

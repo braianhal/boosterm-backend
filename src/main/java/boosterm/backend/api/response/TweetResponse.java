@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TweetResponse {
 
+    private Long id;
+
     private String user;
 
     private String text;
@@ -20,11 +22,16 @@ public class TweetResponse {
     private int favs;
 
     public TweetResponse(Tweet tweet) {
+        this.id = tweet.getId();
         this.user = tweet.getUser();
         this.text = tweet.getText();
         this.date = tweet.getDate();
         this.retweets = tweet.getRetweets();
         this.favs = tweet.getFavs();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUser() {
