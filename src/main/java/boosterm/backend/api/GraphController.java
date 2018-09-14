@@ -5,10 +5,7 @@ import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.Search;
 import boosterm.backend.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import twitter4j.TwitterException;
 
 import java.time.LocalDate;
@@ -18,6 +15,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/graphs")
 public class GraphController {
