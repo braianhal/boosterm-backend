@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TweetResponse {
 
-    private Long id;
+    private String id;
 
     private String user;
 
@@ -30,7 +30,7 @@ public class TweetResponse {
         this.favs = tweet.getFavs();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

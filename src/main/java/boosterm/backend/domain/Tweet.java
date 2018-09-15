@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Tweet {
 
-    private Long id;
+    private String id;
 
     private String user;
 
@@ -16,7 +16,7 @@ public class Tweet {
 
     private int favs;
 
-    public Tweet(Long id, String user, String text, LocalDateTime date, int retweets, int favs) {
+    public Tweet(String id, String user, String text, LocalDateTime date, int retweets, int favs) {
         this.id = id;
         this.user = user;
         this.text = text;
@@ -25,7 +25,7 @@ public class Tweet {
         this.favs = favs;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
