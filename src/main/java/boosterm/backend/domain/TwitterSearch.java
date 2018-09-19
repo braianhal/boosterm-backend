@@ -3,7 +3,7 @@ package boosterm.backend.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Search {
+public class TwitterSearch {
 
     private String term;
 
@@ -11,7 +11,7 @@ public class Search {
 
     private CustomDuration timeLimit;
 
-    public Search(String term, String language, CustomDuration timeLimit) {
+    public TwitterSearch(String term, String language, CustomDuration timeLimit) {
         this.term = term;
         this.language = language;
         this.timeLimit = timeLimit;
