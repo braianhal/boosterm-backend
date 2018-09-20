@@ -73,6 +73,7 @@ public class GraphController {
     public List<ArticleResponse> getNewsFeed(@RequestParam String term,
     										 @RequestParam String lang) {	
 		try {
+			term = term.replace(" ", "%20");
 			
 			NewsSearch search = new NewsSearch(term, lang);
 			
@@ -83,7 +84,6 @@ public class GraphController {
 			throw new RuntimeException(e.getMessage());
 		}
     }
-
 
     // Auxiliary
 
