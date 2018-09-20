@@ -1,11 +1,13 @@
 package boosterm.backend.api;
 
-import boosterm.backend.api.request.UserRequest;
+import boosterm.backend.api.exception.NotFoundException;
 import boosterm.backend.api.response.UserResponse;
 import boosterm.backend.domain.User;
 import boosterm.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @CrossOrigin
 @RestController
@@ -16,12 +18,13 @@ public class UserController {
     public UserService userService;
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserRequest req) {
-        return new UserResponse(userService.createUser(req));
+    @ResponseStatus(NO_CONTENT)
+    public void createUser(@RequestHeader("X-Auth-Mail") String email) {
+        userService.createUser(email);
     }
 
-    @GetMapping("/{email}")
-    public UserResponse getUser(@PathVariable String email) {
+    @GetMapping
+    public UserResponse getUser(@RequestHeader("X-Auth-Mail") String email) {
         return new UserResponse(getUserByEmail(email));
     }
 
@@ -30,7 +33,7 @@ public class UserController {
     private User getUserByEmail(String email) {
         User user = userService.getUser(email);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new NotFoundException("User not found");
         }
         return user;
     }
