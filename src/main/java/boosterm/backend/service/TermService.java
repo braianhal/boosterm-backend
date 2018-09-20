@@ -16,21 +16,18 @@ public class TermService {
     @Autowired
     public TermRepo repo;
 
-    public Term saveTerm(User user, TermRequest termData) {
-        Term term = new Term(termData.getTerm(), termData.getDescription());
+    public void saveTerm(User user, TermRequest termData) {
+        Term term = new Term(termData.getCode(), termData.getName(), termData.getType(), termData.getDescription());
         repo.save(user, term);
-        return term;
     }
 
-    public Term updateTerm(User user, Term term, TermUpdateRequest updatedTermData) {
-        Term updatedTerm = new Term(term.getTerm(), updatedTermData.getDescription());
+    public void updateTerm(User user, Term term, TermUpdateRequest updatedTermData) {
+        Term updatedTerm = new Term(term.getCode(), term.getName(), term.getType(), updatedTermData.getDescription());
         repo.save(user, updatedTerm);
-        return term;
     }
 
-    public Term deleteTerm(User user, Term term) {
+    public void deleteTerm(User user, Term term) {
         repo.delete(user, term);
-        return term;
     }
 
     public List<Term> getAllTerms(User user) {

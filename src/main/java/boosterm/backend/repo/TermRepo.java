@@ -35,13 +35,13 @@ public class TermRepo implements RedisRepo<Term> {
     }
 
     public void save(User user, Term term) {
-        redis.sadd(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getTerm());
-        redis.set(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getTerm()),  gson.toJson(term));
+        redis.sadd(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getName());
+        redis.set(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getName()),  gson.toJson(term));
     }
 
     public void delete(User user, Term term) {
-        redis.srem(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getTerm());
-        redis.del(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getTerm()));
+        redis.srem(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getName());
+        redis.del(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getName()));
     }
 
 }

@@ -1,5 +1,6 @@
 package boosterm.backend.api;
 
+import boosterm.backend.api.exception.NotFoundException;
 import boosterm.backend.api.request.TermRequest;
 import boosterm.backend.api.request.TermUpdateRequest;
 import boosterm.backend.api.response.TermResponse;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 @CrossOrigin
 @RestController
-@RequestMapping("/users/{userEmail}/terms")
+@RequestMapping("/users/terms")
 public class TermController {
 
     @Autowired
@@ -25,30 +28,33 @@ public class TermController {
     public UserService userService;
 
     @PostMapping
-    public TermResponse saveTerm(@PathVariable String userEmail,
-                                 @RequestBody TermRequest req) {
-        return new TermResponse(termService.saveTerm(getUserByEmail(userEmail), req));
+    @ResponseStatus(NO_CONTENT)
+    public void saveTerm(@RequestHeader("X-Auth-Mail") String userEmail,
+                         @RequestBody TermRequest req) {
+        termService.saveTerm(getUserByEmail(userEmail), req);
     }
 
-    @PutMapping("/{term}")
-    public TermResponse updateTerm(@PathVariable String userEmail,
-                                   @PathVariable String term,
-                                   @RequestBody TermUpdateRequest req) {
+    @PutMapping("/{termName}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateTerm(@RequestHeader("X-Auth-Mail") String userEmail,
+                           @PathVariable String termName,
+                           @RequestBody TermUpdateRequest req) {
         User user = getUserByEmail(userEmail);
-        Term savedTerm = getTermByName(user, term);
-        return new TermResponse(termService.updateTerm(user, savedTerm, req));
+        Term savedTerm = getTermByName(user, termName);
+        termService.updateTerm(user, savedTerm, req);
     }
 
-    @DeleteMapping("/{term}")
-    public TermResponse updateTerm(@PathVariable String userEmail,
-                                   @PathVariable String term) {
+    @DeleteMapping("/{termName}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateTerm(@RequestHeader("X-Auth-Mail") String userEmail,
+                           @PathVariable String termName) {
         User user = getUserByEmail(userEmail);
-        Term savedTerm = getTermByName(user, term);
-        return new TermResponse(termService.deleteTerm(user, savedTerm));
+        Term savedTerm = getTermByName(user, termName);
+        termService.deleteTerm(user, savedTerm);
     }
 
     @GetMapping
-    public List<TermResponse> getAllTerms(@PathVariable String userEmail) {
+    public List<TermResponse> getAllTerms(@RequestHeader("X-Auth-Mail") String userEmail) {
 
         return termService.getAllTerms(getUserByEmail(userEmail)).stream()
                 .map(TermResponse::new).collect(Collectors.toList());
@@ -59,7 +65,7 @@ public class TermController {
     private Term getTermByName(User user, String name) {
         Term term = termService.getTerm(user, name);
         if (term == null) {
-            throw new RuntimeException("Term not found");
+            throw new NotFoundException("Term not found");
         }
         return term;
     }
@@ -67,7 +73,7 @@ public class TermController {
     private User getUserByEmail(String email) {
         User user = userService.getUser(email);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new NotFoundException("User not found");
         }
         return user;
     }
