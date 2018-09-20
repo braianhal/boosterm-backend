@@ -1,11 +1,10 @@
 package boosterm.backend.api.response;
 
-import java.time.LocalDateTime;
-
+import boosterm.backend.domain.Article;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import boosterm.backend.domain.Article;
+import java.time.LocalDateTime;
 
 @JsonNaming(SnakeCaseStrategy.class)
 public class ArticleResponse {

@@ -1,28 +1,19 @@
 package boosterm.backend.service;
 
 import boosterm.backend.api.response.ArticleResponse;
-import boosterm.backend.client.TwitterClient;
-import boosterm.backend.domain.TwitterSearch;
-import boosterm.backend.domain.NewsApi;
-import boosterm.backend.domain.NewsSearch;
-import boosterm.backend.domain.Tweet;
 import boosterm.backend.client.MeaningCloudClient;
-import boosterm.backend.domain.Sentiment;
-
-import org.apache.http.client.fluent.Request;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import boosterm.backend.client.TwitterClient;
+import boosterm.backend.domain.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.http.client.fluent.Request;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import twitter4j.TwitterException;
-
-import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +28,7 @@ import java.util.Map;
 import static boosterm.backend.config.SystemConfig.now;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class GraphService {

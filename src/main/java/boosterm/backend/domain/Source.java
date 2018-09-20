@@ -1,7 +1,5 @@
 package boosterm.backend.domain;
 
-import java.util.List;
-
 public class Source {
 	private String id;
 	
