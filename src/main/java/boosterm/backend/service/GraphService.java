@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static boosterm.backend.config.SystemConfig.now;
 import static java.math.BigDecimal.ZERO;
@@ -73,7 +74,11 @@ public class GraphService {
     
     public List<ArticleResponse> getNewsFeed(NewsSearch search) throws IOException {
     	
-    	String url = "https://newsapi.org/v2/everything?q=" + search.getTerm() + "&language=" + search.getLanguage() + "&pageSize=100&sortBy=publishedAt&apiKey=" + newsApiKey;
+    	String url = "https://newsapi.org/v2/everything?q=+" + search.getTerm() +
+    			"&language=" + search.getLanguage() +
+    			"&from=" + search.getFrom() +
+    			"&to=" + search.getTo() +
+    			"&pageSize=100&sortBy=popularity&apiKey=" + newsApiKey;
 		InputStream stream = Request.Get(url)
 				.execute().returnContent().asStream();
 	    	
@@ -83,7 +88,16 @@ public class GraphService {
 		
 		NewsApi news = objectMapper.readValue(stream, NewsApi.class);
 		
-		return news.getArticles().stream().map(ArticleResponse::new).collect(toList());
+		Predicate<ArticleResponse> predicate1 = article->article.getContent() == null;
+		Predicate<ArticleResponse> predicate = article->(/*!article.getTitle().replace(" ", "%20").toLowerCase().contains(search.getTerm().toLowerCase()) ||*/
+				!article.getContent().replace(" ", "%20").toLowerCase().contains(search.getTerm().toLowerCase()));
+		
+		List<ArticleResponse> articles = news.getArticles().stream().map(ArticleResponse::new).collect(toList());
+		
+		articles.removeIf(predicate1);
+		articles.removeIf(predicate);
+		
+		return articles;
     }
     
     public List<SourceResponse> getSourcesForTerm(NewsSearch search) throws IOException {

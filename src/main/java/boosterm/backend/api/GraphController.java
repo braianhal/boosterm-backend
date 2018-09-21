@@ -72,13 +72,15 @@ public class GraphController {
     
 	@GetMapping("/feeds/news")
     public List<ArticleResponse> getNewsFeed(@RequestParam String term,
-    										 @RequestParam String lang) {	
+    										 @RequestParam String lang,
+    										 @RequestParam String from,
+    										 @RequestParam String to) {	
 		try {
 			term = term.replace(" ", "%20");
 			
-			NewsSearch search = new NewsSearch(term, lang);
+			NewsSearch search = new NewsSearch(term, lang, from, to);
 			
-			List<ArticleResponse> articles = service.getNewsFeed(search).subList(0, 10);
+			List<ArticleResponse> articles = service.getNewsFeed(search);//.subList(0, 10);
 			
 			articles.forEach((article) -> {
 				article.cleanStuffUp();
@@ -93,13 +95,15 @@ public class GraphController {
 
 	@GetMapping("/sources/news")
     public List<SourceResponse> getSourcesForTerm(@RequestParam String term,
-    									   @RequestParam String lang) {	
+    									   		  @RequestParam String lang,
+    									   		  @RequestParam String from,
+    									   		  @RequestParam String to) {	
 		try {
 			term = term.replace(" ", "%20");
 			
-			NewsSearch search = new NewsSearch(term, lang);
+			NewsSearch search = new NewsSearch(term, lang, from, to);
 			
-			return service.getSourcesForTerm(search).subList(0, 5);
+			return service.getSourcesForTerm(search);//.subList(0, 5);
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
