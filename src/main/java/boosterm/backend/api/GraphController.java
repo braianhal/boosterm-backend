@@ -1,6 +1,7 @@
 package boosterm.backend.api;
 
 import boosterm.backend.api.response.ArticleResponse;
+import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.api.response.TweetResponse;
 import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.NewsSearch;
@@ -77,7 +78,23 @@ public class GraphController {
 			
 			NewsSearch search = new NewsSearch(term, lang);
 			
-			return service.getNewsFeed(search);
+			return service.getNewsFeed(search).subList(0, 10);
+			
+			
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+    }
+
+	@GetMapping("/sources/news")
+    public List<SourceResponse> getSourcesForTerm(@RequestParam String term,
+    									   @RequestParam String lang) {	
+		try {
+			term = term.replace(" ", "%20");
+			
+			NewsSearch search = new NewsSearch(term, lang);
+			
+			return service.getSourcesForTerm(search).subList(0, 5);
 			
 			
 		} catch (IOException e) {

@@ -1,6 +1,7 @@
 package boosterm.backend.service;
 
 import boosterm.backend.api.response.ArticleResponse;
+import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.client.MeaningCloudClient;
 import boosterm.backend.client.TwitterClient;
 import boosterm.backend.domain.*;
@@ -21,6 +22,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +73,7 @@ public class GraphService {
     
     public List<ArticleResponse> getNewsFeed(NewsSearch search) throws IOException {
     	
-    	String url = "https://newsapi.org/v2/everything?q=" + search.getTerm() + "&language=" + search.getLanguage() + "&sortBy=publishedAt&apiKey=" + newsApiKey;
+    	String url = "https://newsapi.org/v2/everything?q=" + search.getTerm() + "&language=" + search.getLanguage() + "&pageSize=100&sortBy=publishedAt&apiKey=" + newsApiKey;
 		InputStream stream = Request.Get(url)
 				.execute().returnContent().asStream();
 	    	
@@ -81,6 +84,27 @@ public class GraphService {
 		NewsApi news = objectMapper.readValue(stream, NewsApi.class);
 		
 		return news.getArticles().stream().map(ArticleResponse::new).collect(toList());
+    }
+    
+    public List<SourceResponse> getSourcesForTerm(NewsSearch search) throws IOException {
+    	
+    	List<ArticleResponse> articles = this.getNewsFeed(search);
+    	
+    	HashMap<String, Integer> map = new HashMap<>();
+    	
+    	articles.forEach((article)-> {
+    		String source = article.getSource();
+    	
+    		if(map.containsKey(source)) {
+    			int newValue = map.get(source) + 1;
+    			map.replace(source, newValue);
+    		}
+    		else
+    			map.put(source, 1);
+    	});
+    	
+    	
+    	return this.createSourceResponseFromMap(map);    	
     }
 
     public Map<Sentiment, BigDecimal> getSentimentAnalysisForTweets(TwitterSearch search) throws TwitterException, UnirestException {
@@ -108,6 +132,24 @@ public class GraphService {
             sentimentValues.put(entry.getKey(), entry.getValue().divide(total, 2, HALF_UP));
         }
         return sentimentValues;
+    }
+    
+    private List<SourceResponse> createSourceResponseFromMap(HashMap<String, Integer> map) {
+    	
+    	List<SourceResponse> sources = new ArrayList<SourceResponse>();
+    	
+    	map.forEach((source, news)-> {
+    		sources.add(new SourceResponse(source, news));
+    	});
+    	
+    	Collections.sort(sources, new Comparator<SourceResponse>() {
+    	    @Override
+    	    public int compare(SourceResponse source1, SourceResponse source2) {
+    	        return source1.getNews() > source2.getNews() ? -1 : (source1.getNews() < source2.getNews()) ? 1 : 0;
+    	    };
+    	});
+    	
+    	return sources;
     }
 
 }
