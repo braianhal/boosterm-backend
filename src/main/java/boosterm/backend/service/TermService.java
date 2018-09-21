@@ -34,8 +34,8 @@ public class TermService {
         return repo.getAll(user);
     }
 
-    public Term getTerm(User user, String name) {
-        return repo.get(user, name);
+    public Term getTerm(User user, String code) {
+        return repo.get(user, code);
     }
 
 }

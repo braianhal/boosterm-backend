@@ -25,8 +25,8 @@ public class TermRepo implements RedisRepo<Term> {
 
     private static String TERM_KEY_FORMAT = "user:%s:term:%s";
 
-    public Term get(User user, String name) {
-        return gson.fromJson(redis.get(getKey(TERM_KEY_FORMAT, user.getEmail(), name)), Term.class);
+    public Term get(User user, String code) {
+        return gson.fromJson(redis.get(getKey(TERM_KEY_FORMAT, user.getEmail(), code)), Term.class);
     }
 
     public List<Term> getAll(User user) {
@@ -35,13 +35,13 @@ public class TermRepo implements RedisRepo<Term> {
     }
 
     public void save(User user, Term term) {
-        redis.sadd(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getName());
-        redis.set(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getName()),  gson.toJson(term));
+        redis.sadd(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getCode());
+        redis.set(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getCode()),  gson.toJson(term));
     }
 
     public void delete(User user, Term term) {
-        redis.srem(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getName());
-        redis.del(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getName()));
+        redis.srem(getKey(TERMS_LIST_KEY_FORMAT, user.getEmail()), term.getCode());
+        redis.del(getKey(TERM_KEY_FORMAT, user.getEmail(), term.getCode()));
     }
 
 }

@@ -34,22 +34,22 @@ public class TermController {
         termService.saveTerm(getUserByEmail(userEmail), req);
     }
 
-    @PutMapping("/{termName}")
+    @PutMapping
     @ResponseStatus(NO_CONTENT)
     public void updateTerm(@RequestHeader("X-Auth-Mail") String userEmail,
-                           @PathVariable String termName,
+                           @RequestParam("code") String termCode,
                            @RequestBody TermUpdateRequest req) {
         User user = getUserByEmail(userEmail);
-        Term savedTerm = getTermByName(user, termName);
+        Term savedTerm = getTermByCode(user, termCode);
         termService.updateTerm(user, savedTerm, req);
     }
 
-    @DeleteMapping("/{termName}")
+    @DeleteMapping
     @ResponseStatus(NO_CONTENT)
     public void updateTerm(@RequestHeader("X-Auth-Mail") String userEmail,
-                           @PathVariable String termName) {
+                           @RequestParam("code") String termCode) {
         User user = getUserByEmail(userEmail);
-        Term savedTerm = getTermByName(user, termName);
+        Term savedTerm = getTermByCode(user, termCode);
         termService.deleteTerm(user, savedTerm);
     }
 
@@ -62,8 +62,8 @@ public class TermController {
 
     // Auxiliary
 
-    private Term getTermByName(User user, String name) {
-        Term term = termService.getTerm(user, name);
+    private Term getTermByCode(User user, String code) {
+        Term term = termService.getTerm(user, code);
         if (term == null) {
             throw new NotFoundException("Term not found");
         }
