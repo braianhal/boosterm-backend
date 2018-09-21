@@ -53,4 +53,11 @@ public class ArticleResponse {
     public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
+    
+    public void cleanStuffUp() {
+	    content = content.split("(\\[)(\\+)")[0];
+	    
+	    if (source.equals("La Nacion"))
+	    	urlToImage = "https:" + urlToImage;
+    }
 }

@@ -78,8 +78,13 @@ public class GraphController {
 			
 			NewsSearch search = new NewsSearch(term, lang);
 			
-			return service.getNewsFeed(search).subList(0, 10);
+			List<ArticleResponse> articles = service.getNewsFeed(search).subList(0, 10);
 			
+			articles.forEach((article) -> {
+				article.cleanStuffUp();
+			});
+			
+			return articles;
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
@@ -95,7 +100,6 @@ public class GraphController {
 			NewsSearch search = new NewsSearch(term, lang);
 			
 			return service.getSourcesForTerm(search).subList(0, 5);
-			
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
