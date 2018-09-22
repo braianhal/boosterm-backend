@@ -74,7 +74,7 @@ public class GraphService {
     
     public List<ArticleResponse> getNewsFeed(NewsSearch search) throws IOException {
     	
-    	String url = "https://newsapi.org/v2/everything?q=+" + search.getTerm() +
+    	String url = "https://newsapi.org/v2/everything?q=" + search.getTerm() +
     			"&language=" + search.getLanguage() +
     			"&from=" + search.getFrom() +
     			"&to=" + search.getTo() +

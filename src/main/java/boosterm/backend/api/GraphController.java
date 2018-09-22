@@ -80,7 +80,12 @@ public class GraphController {
 			
 			NewsSearch search = new NewsSearch(term, lang, from, to);
 			
-			List<ArticleResponse> articles = service.getNewsFeed(search);//.subList(0, 10);
+			List<ArticleResponse> articles = service.getNewsFeed(search);
+			
+			if (articles.size() < 10)
+				articles = articles.subList(0, articles.size());
+			else
+				articles = articles.subList(0, 10);
 			
 			articles.forEach((article) -> {
 				article.cleanStuffUp();
@@ -103,7 +108,14 @@ public class GraphController {
 			
 			NewsSearch search = new NewsSearch(term, lang, from, to);
 			
-			return service.getSourcesForTerm(search);//.subList(0, 5);
+			List<SourceResponse> sources = service.getSourcesForTerm(search);
+			
+			if (sources.size() < 5)
+				sources = sources.subList(0, sources.size());
+			else
+				sources = sources.subList(0, 5);
+			
+			return sources;
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
