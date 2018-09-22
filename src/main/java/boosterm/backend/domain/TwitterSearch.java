@@ -3,7 +3,7 @@ package boosterm.backend.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TwitterSearch {
+public class TwitterSearch implements Search {
 
     private String term;
 

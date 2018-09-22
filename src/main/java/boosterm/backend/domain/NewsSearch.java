@@ -1,6 +1,6 @@
 package boosterm.backend.domain;
 
-public class NewsSearch {
+public class NewsSearch implements Search {
 	
     private String term;
 
