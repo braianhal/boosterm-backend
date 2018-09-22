@@ -133,8 +133,14 @@ public class GraphService {
         }
         return calculateSentimentPercentages(tweets, search);
     }
+    
+    public Map<Sentiment, BigDecimal> getSentimentAnalysisForNews(NewsSearch search) throws IOException, UnirestException {
+        List<ArticleResponse> articles = getNewsFeed(search);
+        
+        return calculateSentimentPercentages(articles.stream().map(ArticleResponse::getContent).collect(toList()), search);
+    }
 
-    private Map<Sentiment, BigDecimal> calculateSentimentPercentages(List<String> texts, TwitterSearch search) throws UnirestException {
+    private Map<Sentiment, BigDecimal> calculateSentimentPercentages(List<String> texts, Search search) throws UnirestException {
         Map<Sentiment, BigDecimal> sentimentValues = meaningCloud.getSentimentsValues(texts, search.getLanguage());
         BigDecimal total = ZERO;
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())

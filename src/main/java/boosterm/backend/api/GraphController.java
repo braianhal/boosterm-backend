@@ -103,11 +103,11 @@ public class GraphController {
     									   		  @RequestParam String lang,
     									   		  @RequestParam String from,
     									   		  @RequestParam String to) {	
+		term = term.replace(" ", "%20");
+		
+		NewsSearch search = new NewsSearch(term, lang, from, to);
+		
 		try {
-			term = term.replace(" ", "%20");
-			
-			NewsSearch search = new NewsSearch(term, lang, from, to);
-			
 			List<SourceResponse> sources = service.getSourcesForTerm(search);
 			
 			if (sources.size() < 5)
@@ -118,10 +118,26 @@ public class GraphController {
 			return sources;
 			
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException("Can't retrieve data");
 		}
     }
 
+    @GetMapping("/sentiment/news")
+    public Map<String, BigDecimal> getSentimentAnalysisForNews(@RequestParam String term,
+                                                               @RequestParam String lang,
+                                                               @RequestParam String from,
+                                                               @RequestParam String to) {
+    	term = term.replace(" ", "%20");
+    	
+    	NewsSearch search = new NewsSearch(term, lang, from, to);
+    	
+        try {
+            return translatedSentimentMap(service.getSentimentAnalysisForNews(search));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't retrieve data");
+        }
+    }
+    
     // Auxiliary
 
     private Map<String, BigDecimal> translatedSentimentMap(Map<Sentiment, BigDecimal> sentimentMap) {
