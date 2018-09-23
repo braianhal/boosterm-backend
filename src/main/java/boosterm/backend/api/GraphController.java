@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +64,7 @@ public class GraphController {
                                                                  @RequestParam(name = "limit_type") String limitType) {
         TwitterSearch search = new TwitterSearch(term, lang, new CustomDuration(limitAmount, valueOf(limitType)));
         try {
-            return translatedSentimentMap(service.getSentimentAnalysisForTweets(search));
+            return translatedAndSortedSentimentMap(service.getSentimentAnalysisForTweets(search));
         } catch (Exception e) {
             throw new RuntimeException("Can't retrieve data");
         }
@@ -132,7 +132,7 @@ public class GraphController {
     	NewsSearch search = new NewsSearch(term, lang, from, to);
     	
         try {
-            return translatedSentimentMap(service.getSentimentAnalysisForNews(search));
+            return translatedAndSortedSentimentMap(service.getSentimentAnalysisForNews(search));
         } catch (Exception e) {
             throw new RuntimeException("Can't retrieve data");
         }
@@ -140,13 +140,12 @@ public class GraphController {
     
     // Auxiliary
 
-    private Map<String, BigDecimal> translatedSentimentMap(Map<Sentiment, BigDecimal> sentimentMap) {
-        Map<String, BigDecimal> translated = new HashMap<>();
-        for (Map.Entry<Sentiment, BigDecimal> entry : sentimentMap.entrySet())
-        {
-            translated.put(entry.getKey().getTranslation(), entry.getValue());
+    private Map<String, BigDecimal> translatedAndSortedSentimentMap(Map<Sentiment, BigDecimal> sentimentMap) {
+        Map<String, BigDecimal> newMap = new LinkedHashMap<>();
+        for (Sentiment sentiment : Sentiment.values()) {
+            newMap.put(sentiment.getTranslation(), sentimentMap.get(sentiment));
         }
-        return translated;
+        return newMap;
     }
 
 }
