@@ -1,5 +1,6 @@
 package boosterm.backend.api;
 
+import boosterm.backend.api.exception.CantRetrieveDataException;
 import boosterm.backend.api.response.ArticleResponse;
 import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.api.response.TweetResponse;
@@ -39,7 +40,7 @@ public class GraphController {
         try {
             return service.getTweetFeed(search).stream().map(TweetResponse::new).collect(toList());
         } catch (Exception e) {
-            throw new RuntimeException("Can't retrieve data");
+            throw new CantRetrieveDataException(e);
         }
     }
 
@@ -53,7 +54,7 @@ public class GraphController {
         try {
             return service.getPopularityValueInTimeForTweets(search);
         } catch (Exception e) {
-            throw new RuntimeException("Can't retrieve data");
+            throw new CantRetrieveDataException(e);
         }
     }
 
@@ -66,7 +67,7 @@ public class GraphController {
         try {
             return translatedAndSortedSentimentMap(service.getSentimentAnalysisForTweets(search));
         } catch (Exception e) {
-            throw new RuntimeException("Can't retrieve data");
+            throw new CantRetrieveDataException(e);
         }
     }
     
@@ -94,7 +95,7 @@ public class GraphController {
 			return articles;
 			
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+            throw new CantRetrieveDataException(e);
 		}
     }
 
@@ -118,7 +119,7 @@ public class GraphController {
 			return sources;
 			
 		} catch (IOException e) {
-			throw new RuntimeException("Can't retrieve data");
+            throw new CantRetrieveDataException(e);
 		}
     }
 
@@ -134,7 +135,7 @@ public class GraphController {
         try {
             return translatedAndSortedSentimentMap(service.getSentimentAnalysisForNews(search));
         } catch (Exception e) {
-            throw new RuntimeException("Can't retrieve data");
+            throw new CantRetrieveDataException(e);
         }
     }
     
