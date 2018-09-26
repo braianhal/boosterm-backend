@@ -142,6 +142,9 @@ public class GraphService {
         {
             total = total.add(entry.getValue());
         }
+        if (total.equals(ZERO)) {
+            return sentimentValues;
+        }
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
         {
             sentimentValues.put(entry.getKey(), entry.getValue().divide(total, 2, HALF_UP));
