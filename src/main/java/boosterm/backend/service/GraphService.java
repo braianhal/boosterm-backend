@@ -5,6 +5,7 @@ import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.client.MeaningCloudClient;
 import boosterm.backend.client.TwitterClient;
 import boosterm.backend.domain.*;
+import boosterm.backend.domain.exception.EmptySentimentListException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -136,14 +137,14 @@ public class GraphService {
     }
 
     private Map<Sentiment, BigDecimal> calculateSentimentPercentages(List<String> texts, Search search) throws UnirestException {
+        if (texts.isEmpty()) {
+            throw new EmptySentimentListException();
+        }
         Map<Sentiment, BigDecimal> sentimentValues = meaningCloud.getSentimentsValues(texts, search.getLanguage());
         BigDecimal total = ZERO;
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
         {
             total = total.add(entry.getValue());
-        }
-        if (total.equals(ZERO)) {
-            return sentimentValues;
         }
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
         {

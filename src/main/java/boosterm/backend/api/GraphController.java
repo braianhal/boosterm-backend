@@ -1,6 +1,7 @@
 package boosterm.backend.api;
 
-import boosterm.backend.api.exception.CantRetrieveDataException;
+import boosterm.backend.api.exception.CantRetrieveDataExceptionResponse;
+import boosterm.backend.api.exception.EmptySentimentListExceptionResponse;
 import boosterm.backend.api.response.ArticleResponse;
 import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.api.response.TweetResponse;
@@ -8,6 +9,7 @@ import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.NewsSearch;
 import boosterm.backend.domain.Sentiment;
 import boosterm.backend.domain.TwitterSearch;
+import boosterm.backend.domain.exception.EmptySentimentListException;
 import boosterm.backend.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +42,7 @@ public class GraphController {
         try {
             return service.getTweetFeed(search).stream().map(TweetResponse::new).collect(toList());
         } catch (Exception e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
         }
     }
 
@@ -54,7 +56,7 @@ public class GraphController {
         try {
             return service.getPopularityValueInTimeForTweets(search);
         } catch (Exception e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
         }
     }
 
@@ -66,8 +68,10 @@ public class GraphController {
         TwitterSearch search = new TwitterSearch(term, lang, new CustomDuration(limitAmount, valueOf(limitType)));
         try {
             return translatedAndSortedSentimentMap(service.getSentimentAnalysisForTweets(search));
+        } catch(EmptySentimentListException e) {
+            throw new EmptySentimentListExceptionResponse(e);
         } catch (Exception e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
         }
     }
     
@@ -95,7 +99,7 @@ public class GraphController {
 			return articles;
 			
 		} catch (IOException e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
 		}
     }
 
@@ -119,7 +123,7 @@ public class GraphController {
 			return sources;
 			
 		} catch (IOException e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
 		}
     }
 
@@ -134,8 +138,10 @@ public class GraphController {
     	
         try {
             return translatedAndSortedSentimentMap(service.getSentimentAnalysisForNews(search));
+        } catch(EmptySentimentListException e) {
+            throw new EmptySentimentListExceptionResponse(e);
         } catch (Exception e) {
-            throw new CantRetrieveDataException(e);
+            throw new CantRetrieveDataExceptionResponse(e);
         }
     }
     

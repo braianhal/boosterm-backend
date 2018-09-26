@@ -44,9 +44,6 @@ public class MeaningCloudClient {
 
     public Map<Sentiment, BigDecimal> getSentimentsValues(List<String> texts, String language) throws UnirestException {
         HashMap<Sentiment, BigDecimal> valuesMap = initializeValuesMap();
-        if (texts.isEmpty()) {
-            return valuesMap;
-        }
         List<SentimentAnalysisResult.Sentence> resultSentencesList = gson.fromJson(getSentimentData(join(texts, '.'), language), SentimentAnalysisResult.class).getSentences();
         resultSentencesList.forEach(sentence -> {
             Sentiment sentiment = fromScoreTag(sentence.getScore());

@@ -1,6 +1,6 @@
 package boosterm.backend.api;
 
-import boosterm.backend.api.exception.NotFoundException;
+import boosterm.backend.api.exception.NotFoundExceptionResponse;
 import boosterm.backend.api.request.TermRequest;
 import boosterm.backend.api.request.TermUpdateRequest;
 import boosterm.backend.api.response.TermResponse;
@@ -65,7 +65,7 @@ public class TermController {
     private Term getTermByCode(User user, String code) {
         Term term = termService.getTerm(user, code);
         if (term == null) {
-            throw new NotFoundException("Term not found");
+            throw new NotFoundExceptionResponse("Term not found");
         }
         return term;
     }
@@ -73,7 +73,7 @@ public class TermController {
     private User getUserByEmail(String email) {
         User user = userService.getUser(email);
         if (user == null) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundExceptionResponse("User not found");
         }
         return user;
     }

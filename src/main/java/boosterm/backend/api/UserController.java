@@ -1,6 +1,6 @@
 package boosterm.backend.api;
 
-import boosterm.backend.api.exception.NotFoundException;
+import boosterm.backend.api.exception.NotFoundExceptionResponse;
 import boosterm.backend.api.response.UserResponse;
 import boosterm.backend.domain.User;
 import boosterm.backend.service.UserService;
@@ -33,7 +33,7 @@ public class UserController {
     private User getUserByEmail(String email) {
         User user = userService.getUser(email);
         if (user == null) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundExceptionResponse("User not found");
         }
         return user;
     }
