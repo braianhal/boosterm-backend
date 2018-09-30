@@ -2,15 +2,15 @@ package boosterm.backend.api;
 
 import boosterm.backend.api.exception.CantRetrieveDataExceptionResponse;
 import boosterm.backend.api.exception.EmptySentimentListExceptionResponse;
+import boosterm.backend.api.exception.NotFoundExceptionResponse;
 import boosterm.backend.api.response.ArticleResponse;
 import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.api.response.TweetResponse;
-import boosterm.backend.domain.CustomDuration;
-import boosterm.backend.domain.NewsSearch;
-import boosterm.backend.domain.Sentiment;
-import boosterm.backend.domain.TwitterSearch;
+import boosterm.backend.domain.*;
 import boosterm.backend.domain.exception.EmptySentimentListException;
 import boosterm.backend.service.GraphService;
+import boosterm.backend.service.TermService;
+import boosterm.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.valueOf;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @CrossOrigin
 @RestController
@@ -31,6 +32,31 @@ public class GraphController {
 
     @Autowired
     public GraphService service;
+
+    @Autowired
+    public TermService termService;
+
+    @Autowired
+    public UserService userService;
+
+    @GetMapping("/config")
+    public Map<String, Boolean> getGraphConfigResponse(@RequestHeader("X-Auth-Mail") String userEmail,
+                                                       @RequestParam("code") String termCode) {
+        User user = getUserByEmail(userEmail);
+        Term term = getTermByCode(user, termCode);
+        return service.getGraphsConfig(user, term);
+    }
+
+    @PutMapping("/config")
+    @ResponseStatus(NO_CONTENT)
+    public void saveGraphConfig(@RequestHeader("X-Auth-Mail") String userEmail,
+                                @RequestParam("code") String termCode,
+                                @RequestBody Map<String, Boolean> config) {
+        User user = getUserByEmail(userEmail);
+        Term term = getTermByCode(user, termCode);
+        service.saveGraphsConfig(user, term, config);
+    }
+
 
     @GetMapping("/feeds/tweets")
     public List<TweetResponse> getTweetsFeed(@RequestParam String term,
@@ -153,6 +179,22 @@ public class GraphController {
             newMap.put(sentiment.getTranslation(), sentimentMap.get(sentiment));
         }
         return newMap;
+    }
+
+    private Term getTermByCode(User user, String code) {
+        Term term = termService.getTerm(user, code);
+        if (term == null) {
+            throw new NotFoundExceptionResponse("Term not found");
+        }
+        return term;
+    }
+
+    private User getUserByEmail(String email) {
+        User user = userService.getUser(email);
+        if (user == null) {
+            throw new NotFoundExceptionResponse("User not found");
+        }
+        return user;
     }
 
 }

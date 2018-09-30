@@ -6,6 +6,7 @@ import boosterm.backend.client.MeaningCloudClient;
 import boosterm.backend.client.TwitterClient;
 import boosterm.backend.domain.*;
 import boosterm.backend.domain.exception.EmptySentimentListException;
+import boosterm.backend.repo.GraphConfigRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -34,6 +35,9 @@ import static java.util.stream.Collectors.toList;
 public class GraphService {
 
     @Autowired
+    public GraphConfigRepo graphConfigRepo;
+
+    @Autowired
     public TwitterClient twitter;
 
     @Value("${api.news.key}")
@@ -42,11 +46,31 @@ public class GraphService {
     @Autowired
     public MeaningCloudClient meaningCloud;
 
+    private static Map<String, Boolean> DEFAULT_GRAPHS_CONFIG = new HashMap<String, Boolean>() {{
+        put("search-region", true);
+        put("search-time", true);
+        put("news", true);
+        put("twitter", true);
+    }};
+
     private static int TWEET_FEED_COUNT = 10;
 
     private static int TWEET_POPULARIRY_COUNT = 100;
 
     private static int TWEET_DAILY_SENTIMENT_COUNT = 25;
+
+
+    public Map<String, Boolean> getGraphsConfig(User user, Term term) {
+        Map<String, Boolean> config =  graphConfigRepo.get(user, term);
+        if (config == null) {
+            return DEFAULT_GRAPHS_CONFIG;
+        }
+        return config;
+    }
+
+    public void saveGraphsConfig(User user, Term term, Map<String, Boolean> config) {
+        graphConfigRepo.save(user, term, config);
+    }
 
     public List<Tweet> getTweetFeed(TwitterSearch search) throws TwitterException {
         LocalDateTime now = now();
