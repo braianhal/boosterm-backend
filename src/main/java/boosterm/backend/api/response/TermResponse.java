@@ -4,6 +4,8 @@ import boosterm.backend.domain.Term;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.time.LocalDateTime;
+
 @JsonNaming(SnakeCaseStrategy.class)
 public class TermResponse {
 
@@ -15,11 +17,14 @@ public class TermResponse {
 
     private String description;
 
+    private LocalDateTime lastUpdated;
+
     public TermResponse(Term term) {
         this.code = term.getCode();
         this.name = term.getName();
         this.type = term.getType();
         this.description = term.getDescription();
+        this.lastUpdated = term.getLastUpdated();
     }
 
     public String getCode() {
@@ -37,4 +42,9 @@ public class TermResponse {
     public String getDescription() {
         return description;
     }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
 }

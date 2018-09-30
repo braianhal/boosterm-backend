@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static boosterm.backend.config.SystemConfig.now;
+
 @Service
 public class TermService {
 
@@ -17,12 +19,12 @@ public class TermService {
     public TermRepo repo;
 
     public void saveTerm(User user, TermRequest termData) {
-        Term term = new Term(termData.getCode(), termData.getName(), termData.getType(), termData.getDescription());
+        Term term = new Term(termData.getCode(), termData.getName(), termData.getType(), termData.getDescription(), now());
         repo.save(user, term);
     }
 
     public void updateTerm(User user, Term term, TermUpdateRequest updatedTermData) {
-        Term updatedTerm = new Term(term.getCode(), term.getName(), term.getType(), updatedTermData.getDescription());
+        Term updatedTerm = new Term(term.getCode(), term.getName(), term.getType(), updatedTermData.getDescription(), now());
         repo.save(user, updatedTerm);
     }
 

@@ -1,5 +1,7 @@
 package boosterm.backend.domain;
 
+import java.time.LocalDateTime;
+
 public class Term {
 
     private String code;
@@ -10,11 +12,14 @@ public class Term {
 
     private String description;
 
-    public Term(String code, String name, String type, String description) {
+    private LocalDateTime lastUpdated;
+
+    public Term(String code, String name, String type, String description, LocalDateTime lastUpdated) {
         this.code = code;
         this.name = name;
         this.type = type;
         this.description = description;
+        this.lastUpdated = lastUpdated;
     }
 
     public String getCode() {
@@ -31,5 +36,9 @@ public class Term {
 
     public String getDescription() {
         return description;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
     }
 }
