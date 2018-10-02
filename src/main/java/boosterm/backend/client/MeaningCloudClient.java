@@ -1,7 +1,7 @@
 package boosterm.backend.client;
 
 import boosterm.backend.domain.Sentiment;
-import boosterm.backend.domain.SentimentAnalysisResult;
+import boosterm.backend.domain.SentimentAnalysisRawResult;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -44,7 +44,7 @@ public class MeaningCloudClient {
 
     public Map<Sentiment, BigDecimal> getSentimentsValues(List<String> texts, String language) throws UnirestException {
         HashMap<Sentiment, BigDecimal> valuesMap = initializeValuesMap();
-        List<SentimentAnalysisResult.Sentence> resultSentencesList = gson.fromJson(getSentimentData(join(texts, '.'), language), SentimentAnalysisResult.class).getSentences();
+        List<SentimentAnalysisRawResult.Sentence> resultSentencesList = gson.fromJson(getSentimentData(join(texts, '.'), language), SentimentAnalysisRawResult.class).getSentences();
         resultSentencesList.forEach(sentence -> {
             Sentiment sentiment = fromScoreTag(sentence.getScore());
             valuesMap.put(sentiment,

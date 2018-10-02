@@ -46,7 +46,7 @@ public class GraphService {
 
     private static int TWEET_POPULARIRY_COUNT = 100;
 
-    private static int TWEET_DAILY_SENTIMENT_COUNT = 25;
+    private static int TWEET_DAILY_SENTIMENT_COUNT = 30;
 
     public List<Tweet> getTweetFeed(TwitterSearch search) throws TwitterException {
         LocalDateTime now = now();
@@ -117,7 +117,7 @@ public class GraphService {
     	return this.createSourceResponseFromMap(map);    	
     }
 
-    public Map<Sentiment, BigDecimal> getSentimentAnalysisForTweets(TwitterSearch search) throws TwitterException, UnirestException {
+    public SentimentAnalysisResult getSentimentAnalysisForTweets(TwitterSearch search) throws TwitterException, UnirestException {
         LocalDate now = now().toLocalDate();
         LocalDate since = search.sinceDate(now);
         List<String> tweets = new ArrayList<>();
@@ -130,13 +130,13 @@ public class GraphService {
         return calculateSentimentPercentages(tweets, search);
     }
     
-    public Map<Sentiment, BigDecimal> getSentimentAnalysisForNews(NewsSearch search) throws IOException, UnirestException {
+    public SentimentAnalysisResult getSentimentAnalysisForNews(NewsSearch search) throws IOException, UnirestException {
         List<ArticleResponse> articles = getNewsFeed(search);
         
         return calculateSentimentPercentages(articles.stream().map(ArticleResponse::getContent).collect(toList()), search);
     }
 
-    private Map<Sentiment, BigDecimal> calculateSentimentPercentages(List<String> texts, Search search) throws UnirestException {
+    private SentimentAnalysisResult calculateSentimentPercentages(List<String> texts, Search search) throws UnirestException {
         if (texts.isEmpty()) {
             throw new EmptySentimentListException();
         }
@@ -150,7 +150,7 @@ public class GraphService {
         {
             sentimentValues.put(entry.getKey(), entry.getValue().divide(total, 2, HALF_UP));
         }
-        return sentimentValues;
+        return new SentimentAnalysisResult(texts.size(), sentimentValues);
     }
     
     private List<SourceResponse> createSourceResponseFromMap(HashMap<String, Integer> map) {

@@ -3,11 +3,11 @@ package boosterm.backend.api;
 import boosterm.backend.api.exception.CantRetrieveDataExceptionResponse;
 import boosterm.backend.api.exception.EmptySentimentListExceptionResponse;
 import boosterm.backend.api.response.ArticleResponse;
+import boosterm.backend.api.response.SentimentAnalysisResponse;
 import boosterm.backend.api.response.SourceResponse;
 import boosterm.backend.api.response.TweetResponse;
 import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.NewsSearch;
-import boosterm.backend.domain.Sentiment;
 import boosterm.backend.domain.TwitterSearch;
 import boosterm.backend.domain.exception.EmptySentimentListException;
 import boosterm.backend.service.GraphService;
@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,13 +67,13 @@ public class GraphController {
     }
 
     @GetMapping("/sentiment/tweets")
-    public Map<String, BigDecimal> getSentimentAnalysisForTweets(@RequestParam String term,
+    public SentimentAnalysisResponse getSentimentAnalysisForTweets(@RequestParam String term,
                                                                  @RequestParam String lang,
                                                                  @RequestParam(name = "limit_amount") int limitAmount,
                                                                  @RequestParam(name = "limit_type") String limitType) {
         TwitterSearch search = new TwitterSearch(term, lang, new CustomDuration(limitAmount, valueOf(limitType)));
         try {
-            return translatedAndSortedSentimentMap(service.getSentimentAnalysisForTweets(search));
+            return new SentimentAnalysisResponse(service.getSentimentAnalysisForTweets(search));
         } catch(EmptySentimentListException e) {
             throw new EmptySentimentListExceptionResponse(e);
         } catch (Exception e) {
@@ -136,7 +134,7 @@ public class GraphController {
     }
 
     @GetMapping("/sentiment/news")
-    public Map<String, BigDecimal> getSentimentAnalysisForNews(@RequestParam String term,
+    public SentimentAnalysisResponse getSentimentAnalysisForNews(@RequestParam String term,
                                                                @RequestParam String lang,
                                                                @RequestParam String from,
                                                                @RequestParam String to) {
@@ -145,7 +143,7 @@ public class GraphController {
     	NewsSearch search = new NewsSearch(term, lang, from, to);
     	
         try {
-            return translatedAndSortedSentimentMap(service.getSentimentAnalysisForNews(search));
+            return new SentimentAnalysisResponse(service.getSentimentAnalysisForNews(search));
         } catch(EmptySentimentListException e) {
             throw new EmptySentimentListExceptionResponse(e);
         } catch (Exception e) {
@@ -153,14 +151,4 @@ public class GraphController {
         }
     }
     
-    // Auxiliary
-
-    private Map<String, BigDecimal> translatedAndSortedSentimentMap(Map<Sentiment, BigDecimal> sentimentMap) {
-        Map<String, BigDecimal> newMap = new LinkedHashMap<>();
-        for (Sentiment sentiment : Sentiment.values()) {
-            newMap.put(sentiment.getTranslation(), sentimentMap.get(sentiment));
-        }
-        return newMap;
-    }
-
 }

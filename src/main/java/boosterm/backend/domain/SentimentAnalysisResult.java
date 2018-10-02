@@ -1,33 +1,25 @@
 package boosterm.backend.domain;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Map;
 
 public class SentimentAnalysisResult {
 
-    @SerializedName("sentence_list")
-    private List<Sentence> sentences;
+    private int analysedElements;
 
-    public List<Sentence> getSentences() {
-        return sentences;
+    private Map<Sentiment, BigDecimal> sentimentPercentages;
+
+    public SentimentAnalysisResult(int analysedElements, Map<Sentiment, BigDecimal> sentimentPercentages) {
+        this.analysedElements = analysedElements;
+        this.sentimentPercentages = sentimentPercentages;
     }
 
-    public class Sentence {
+    public int getAnalysedElements() {
+        return analysedElements;
+    }
 
-        @SerializedName("score_tag")
-        private String score;
-
-        @SerializedName("confidence")
-        private Integer confidence;
-
-        public String getScore() {
-            return score;
-        }
-
-        public Integer getConfidence() {
-            return confidence;
-        }
+    public Map<Sentiment, BigDecimal> getSentimentPercentages() {
+        return sentimentPercentages;
     }
 
 }
