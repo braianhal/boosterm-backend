@@ -25,8 +25,8 @@ public class TermService {
     public GraphConfigRepo graphConfigRepo;
 
     private static Map<String, Boolean> DEFAULT_GRAPHS_CONFIG = new HashMap<String, Boolean>() {{
-        put("search-region", true);
-        put("search-time", true);
+        put("search_region", true);
+        put("search_time", true);
         put("news", true);
         put("twitter", true);
     }};
