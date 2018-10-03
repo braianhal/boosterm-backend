@@ -55,9 +55,16 @@ public class TermController {
 
     @GetMapping
     public List<TermResponse> getAllTerms(@RequestHeader("X-Auth-Mail") String userEmail) {
-
         return termService.getAllTerms(getUserByEmail(userEmail)).stream()
                 .map(TermResponse::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/term")
+    public TermResponse getTerm(@RequestHeader("X-Auth-Mail") String userEmail,
+                                @RequestParam("code") String termCode) {
+        User user = getUserByEmail(userEmail);
+        Term term = getTermByCode(user, termCode);
+        return new TermResponse(term);
     }
 
     // Auxiliary

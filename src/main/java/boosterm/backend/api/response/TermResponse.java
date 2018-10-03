@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @JsonNaming(SnakeCaseStrategy.class)
 public class TermResponse {
@@ -19,12 +20,15 @@ public class TermResponse {
 
     private LocalDateTime lastUpdated;
 
+    private Map<String, Boolean> graphsConfig;
+
     public TermResponse(Term term) {
         this.code = term.getCode();
         this.name = term.getName();
         this.type = term.getType();
         this.description = term.getDescription();
         this.lastUpdated = term.getLastUpdated();
+        this.graphsConfig = term.getGraphsConfig();
     }
 
     public String getCode() {
@@ -45,6 +49,10 @@ public class TermResponse {
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
+    }
+
+    public Map<String, Boolean> getGraphsConfig() {
+        return graphsConfig;
     }
 
 }

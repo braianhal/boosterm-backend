@@ -1,6 +1,7 @@
 package boosterm.backend.domain;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class Term {
 
@@ -14,12 +15,15 @@ public class Term {
 
     private LocalDateTime lastUpdated;
 
-    public Term(String code, String name, String type, String description, LocalDateTime lastUpdated) {
+    private Map<String, Boolean> graphsConfig;
+
+    public Term(String code, String name, String type, String description, LocalDateTime lastUpdated, Map<String, Boolean> graphsConfig) {
         this.code = code;
         this.name = name;
         this.type = type;
         this.description = description;
         this.lastUpdated = lastUpdated;
+        this.graphsConfig = graphsConfig;
     }
 
     public String getCode() {
@@ -40,5 +44,9 @@ public class Term {
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;
+    }
+
+    public Map<String, Boolean> getGraphsConfig() {
+        return graphsConfig;
     }
 }
