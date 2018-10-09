@@ -4,7 +4,6 @@ import boosterm.backend.api.request.TermRequest;
 import boosterm.backend.api.request.TermUpdateRequest;
 import boosterm.backend.domain.Term;
 import boosterm.backend.domain.User;
-import boosterm.backend.repo.GraphConfigRepo;
 import boosterm.backend.repo.TermRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,6 @@ public class TermService {
 
     @Autowired
     public TermRepo repo;
-
-    @Autowired
-    public GraphConfigRepo graphConfigRepo;
 
     private static Map<String, Boolean> DEFAULT_GRAPHS_CONFIG = new HashMap<String, Boolean>() {{
         put("search_region", true);
