@@ -3,6 +3,8 @@ package boosterm.backend.domain;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import static boosterm.backend.config.SystemConfig.now;
+
 public class Term {
 
     private String code;
@@ -49,4 +51,18 @@ public class Term {
     public Map<String, Boolean> getGraphsConfig() {
         return graphsConfig;
     }
+
+    public Term update(String newDescription, Map<String, Boolean> newGraphsConfig, LocalDateTime now) {
+        String description = newDescription == null ? this.description : newDescription;
+
+        Map<String, Boolean> graphsConfig = this.graphsConfig;
+        if (newGraphsConfig != null) {
+            newGraphsConfig.forEach(graphsConfig::put);
+        }
+
+        LocalDateTime lastUpdated = (newDescription != null || newGraphsConfig != null) ? now() : this.lastUpdated;
+
+        return new Term(this.code, this.name, this.type, description, lastUpdated, graphsConfig);
+    }
+
 }

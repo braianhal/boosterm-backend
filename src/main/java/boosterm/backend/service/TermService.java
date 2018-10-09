@@ -33,9 +33,7 @@ public class TermService {
     }
 
     public void updateTerm(User user, Term term, TermUpdateRequest updatedTermData) {
-        String description = updatedTermData.getDescription() == null ? term.getDescription() : updatedTermData.getDescription();
-        Map<String, Boolean> graphsConfig = updatedTermData.getGraphsConfig() == null ? term.getGraphsConfig() : updatedTermData.getGraphsConfig();
-        Term updatedTerm = new Term(term.getCode(), term.getName(), term.getType(), description, now(), graphsConfig);
+        Term updatedTerm = term.update(updatedTermData.getDescription(), updatedTermData.getGraphsConfig(), now());
         repo.save(user, updatedTerm);
     }
 
