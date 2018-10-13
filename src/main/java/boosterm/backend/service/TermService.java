@@ -28,7 +28,8 @@ public class TermService {
     }};
 
     public void saveTerm(User user, TermRequest termData) {
-        Term term = new Term(termData.getCode(), termData.getName(), termData.getType(), termData.getDescription(), now(), DEFAULT_GRAPHS_CONFIG);
+        Term term = new Term(termData.getCode(), termData.getName(), termData.getType(), termData.getDescription(), now(), DEFAULT_GRAPHS_CONFIG)
+                .update(null, termData.getGraphsConfig(), now());
         repo.save(user, term);
     }
 

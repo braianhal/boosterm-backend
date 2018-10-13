@@ -11,8 +11,6 @@ import boosterm.backend.domain.NewsSearch;
 import boosterm.backend.domain.TwitterSearch;
 import boosterm.backend.domain.exception.EmptySentimentListException;
 import boosterm.backend.service.GraphService;
-import boosterm.backend.service.TermService;
-import boosterm.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +29,6 @@ public class GraphController {
 
     @Autowired
     public GraphService service;
-
-    @Autowired
-    public TermService termService;
-
-    @Autowired
-    public UserService userService;
 
     @GetMapping("/feeds/tweets")
     public List<TweetResponse> getTweetsFeed(@RequestParam String term,
