@@ -47,8 +47,8 @@ public class MeaningCloudClient {
         List<SentimentAnalysisRawResult.Sentence> resultSentencesList = gson.fromJson(getSentimentData(join(texts, '.'), language), SentimentAnalysisRawResult.class).getSentences();
         resultSentencesList.forEach(sentence -> {
             Sentiment sentiment = fromScoreTag(sentence.getScore());
-            valuesMap.put(sentiment,
-                    valuesMap.get(sentiment).add(confidenceToCountValue(sentence.getConfidence())));
+            if (sentiment != null)
+            	valuesMap.put(sentiment, valuesMap.get(sentiment).add(confidenceToCountValue(sentence.getConfidence())));
         });
         return valuesMap;
     }

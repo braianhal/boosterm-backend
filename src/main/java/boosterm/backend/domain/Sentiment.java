@@ -6,8 +6,7 @@ public enum Sentiment {
     POSITIVE("Positivo"),
     NEUTRAL("Neutral"),
     NEGATIVE("Negativo"),
-    VERY_NEGATIVE("Muy negativo"),
-    NONE("No detectado");
+    VERY_NEGATIVE("Muy negativo");
 
     private String translation;
 
@@ -28,7 +27,7 @@ public enum Sentiment {
             case "N+":
                 return VERY_NEGATIVE;
         }
-        return NONE;
+        return null;
     }
 
     public String getTranslation() {
