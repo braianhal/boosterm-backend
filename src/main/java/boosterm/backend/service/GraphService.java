@@ -142,13 +142,20 @@ public class GraphService {
         }
         Map<Sentiment, BigDecimal> sentimentValues = meaningCloud.getSentimentsValues(texts, search.getLanguage());
         BigDecimal total = ZERO;
+        BigDecimal max = new BigDecimal(100);
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
         {
             total = total.add(entry.getValue());
         }
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
         {
-            sentimentValues.put(entry.getKey(), entry.getValue().divide(total, 2, HALF_UP));
+            BigDecimal percentage = entry.getValue().multiply(new BigDecimal(100)).divide(total, 1, HALF_UP);
+            BigDecimal remaining = max.subtract(percentage);
+            if (remaining.compareTo(ZERO) < 0) {
+                percentage = max;
+            }
+            sentimentValues.put(entry.getKey(), percentage);
+            max = remaining;
         }
         return new SentimentAnalysisResult(texts.size(), sentimentValues);
     }
