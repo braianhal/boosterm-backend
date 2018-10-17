@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +45,7 @@ public class GraphController {
     }
 
     @GetMapping("/popularity/tweets")
-    public Map<LocalDate, Integer> getPopularityInTimeForTweets(@RequestParam String term,
+    public Map<String, Integer> getPopularityInTimeForTweets(@RequestParam String term,
                                                                 @RequestParam String lang,
                                                                 @RequestParam(name = "limit_amount") int limitAmount,
                                                                 @RequestParam(name = "limit_type") String limitType) {

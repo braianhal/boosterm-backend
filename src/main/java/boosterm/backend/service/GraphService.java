@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -44,7 +45,7 @@ public class GraphService {
 
     private static int TWEET_FEED_COUNT = 10;
 
-    private static int TWEET_POPULARIRY_COUNT = 100;
+    private static int TWEET_POPULARITY_COUNT = 100;
 
     private static int TWEET_DAILY_SENTIMENT_COUNT = 30;
 
@@ -54,15 +55,18 @@ public class GraphService {
         return twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(), since, now, TWEET_FEED_COUNT);
     }
 
-    public Map<LocalDate, Integer> getPopularityValueInTimeForTweets(TwitterSearch search) throws TwitterException {
+    public Map<String, Integer> getPopularityValueInTimeForTweets(TwitterSearch search) throws TwitterException {
         LocalDate now = now().toLocalDate();
         LocalDate since = search.sinceDate(now);
-        HashMap<LocalDate, Integer> popularityMap = new HashMap<>();
+        HashMap<String, Integer> popularityMap = new HashMap<>();
         while (!since.isAfter(now)) {
             int dayPopularity = twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(),
-                    since.atStartOfDay(), since.plusDays(1).atStartOfDay(), TWEET_POPULARIRY_COUNT)
+                    since.atStartOfDay(), since.plusDays(1).atStartOfDay(), TWEET_POPULARITY_COUNT)
                     .stream().mapToInt(Tweet::getRetweets).sum();
-            popularityMap.put(since, dayPopularity);
+            
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+            
+            popularityMap.put(since.format(formatter), dayPopularity);
             since = since.plusDays(1);
         }
         return popularityMap;
