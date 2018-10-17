@@ -5,6 +5,7 @@ import boosterm.backend.api.exception.EmptySentimentListExceptionResponse;
 import boosterm.backend.api.response.ArticleResponse;
 import boosterm.backend.api.response.SentimentAnalysisResponse;
 import boosterm.backend.api.response.SourceResponse;
+import boosterm.backend.api.response.SourcesResponse;
 import boosterm.backend.api.response.TweetResponse;
 import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.NewsSearch;
@@ -102,7 +103,7 @@ public class GraphController {
     }
 
 	@GetMapping("/sources/news")
-    public List<SourceResponse> getSourcesForTerm(@RequestParam String term,
+    public SourcesResponse getSourcesForTerm(@RequestParam String term,
     									   		  @RequestParam String lang,
     									   		  @RequestParam String from,
     									   		  @RequestParam String to) {	
@@ -118,7 +119,9 @@ public class GraphController {
 			else
 				sources = sources.subList(0, 5);
 			
-			return sources;
+			int elements = sources.stream().mapToInt(element -> element.getNews()).sum();
+			
+			return new SourcesResponse(elements, sources);
 			
 		} catch (IOException e) {
             throw new CantRetrieveDataExceptionResponse(e);
