@@ -10,7 +10,7 @@ public class SystemConfig {
         return Objects.equals(System.getenv("ENV"), "PROD");
     }
 
-    public static String DEFAULT_TIMEZONE = "UTC";
+    public static String DEFAULT_TIMEZONE = "GMT-3";
 
     public static LocalDateTime now() {
         return LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE));
