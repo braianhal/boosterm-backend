@@ -1,9 +1,9 @@
 package boosterm.backend.api.response;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import java.util.List;
 
 @JsonNaming(SnakeCaseStrategy.class)
 public class SourcesResponse {

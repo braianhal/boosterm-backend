@@ -126,7 +126,7 @@ public class GraphService {
         LocalDate since = search.sinceDate(now);
         List<String> tweets = new ArrayList<>();
         while (!since.isAfter(now)) {
-            tweets.addAll(twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(),
+            tweets.addAll(twitter.searchPopularAndRecentTweets(search.getTerm(), search.getLanguage(),
                     since.atStartOfDay(), since.plusDays(1).atStartOfDay(), TWEET_DAILY_SENTIMENT_COUNT)
                     .stream().map(Tweet::getText).collect(toList()));
             since = since.plusDays(1);

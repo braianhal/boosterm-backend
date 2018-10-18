@@ -14,6 +14,7 @@ import java.util.List;
 import static boosterm.backend.config.SystemConfig.DEFAULT_TIMEZONE;
 import static boosterm.backend.utils.Converter.toLocalDateTime;
 import static java.util.stream.Collectors.toList;
+import static twitter4j.Query.ResultType.mixed;
 import static twitter4j.Query.ResultType.popular;
 
 @Service
@@ -47,13 +48,24 @@ public class TwitterClient {
     }
 
     public List<Tweet> searchRelevantTweets(String text, String language, LocalDateTime limitSince, LocalDateTime limitTo, int quantity) throws TwitterException {
+        Query query = getDefaultSearch(text, language, limitSince, limitTo, quantity);
+        query.setResultType(popular);
+        return twitter.search(query).getTweets().stream().map(TwitterClient::toTweet).collect(toList());
+    }
+
+    public List<Tweet> searchPopularAndRecentTweets(String text, String language, LocalDateTime limitSince, LocalDateTime limitTo, int quantity) throws TwitterException {
+        Query query = getDefaultSearch(text, language, limitSince, limitTo, quantity);
+        query.setResultType(mixed);
+        return twitter.search(query).getTweets().stream().map(TwitterClient::toTweet).collect(toList());
+    }
+
+    private Query getDefaultSearch(String text, String language, LocalDateTime limitSince, LocalDateTime limitTo, int quantity) {
         Query query = new Query(text);
         query.setCount(quantity);
         query.setLang(language);
         query.setSince(Converter.toString(limitSince, DATE_LIMIT_FORMAT));
         query.setUntil(Converter.toString(limitTo, DATE_LIMIT_FORMAT));
-        query.setResultType(popular);
-        return twitter.search(query).getTweets().stream().map(TwitterClient::toTweet).collect(toList());
+        return query;
     }
 
     private static Tweet toTweet(Status tweetData) {

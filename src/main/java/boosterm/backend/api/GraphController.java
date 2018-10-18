@@ -2,11 +2,7 @@ package boosterm.backend.api;
 
 import boosterm.backend.api.exception.CantRetrieveDataExceptionResponse;
 import boosterm.backend.api.exception.EmptySentimentListExceptionResponse;
-import boosterm.backend.api.response.ArticleResponse;
-import boosterm.backend.api.response.SentimentAnalysisResponse;
-import boosterm.backend.api.response.SourceResponse;
-import boosterm.backend.api.response.SourcesResponse;
-import boosterm.backend.api.response.TweetResponse;
+import boosterm.backend.api.response.*;
 import boosterm.backend.domain.CustomDuration;
 import boosterm.backend.domain.NewsSearch;
 import boosterm.backend.domain.TwitterSearch;
