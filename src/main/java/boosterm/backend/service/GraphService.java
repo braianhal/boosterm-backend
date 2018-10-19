@@ -137,7 +137,10 @@ public class GraphService {
     public SentimentAnalysisResult getSentimentAnalysisForNews(NewsSearch search) throws IOException, UnirestException {
         List<ArticleResponse> articles = getNewsFeed(search);
         
-        return calculateSentimentPercentages(articles.stream().map(ArticleResponse::getContent).collect(toList()), search);
+        SentimentAnalysisResult result = calculateSentimentPercentages(articles.stream().map(ArticleResponse::getContent).collect(toList()), search);
+        result.inflate();
+        
+        return result;
     }
 
     private SentimentAnalysisResult calculateSentimentPercentages(List<String> texts, Search search) throws UnirestException {
