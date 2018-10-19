@@ -47,7 +47,7 @@ public class GraphService {
 
     private static int TWEET_POPULARITY_COUNT = 100;
 
-    private static int TWEET_DAILY_SENTIMENT_COUNT = 30;
+    private static int TWEET_DAILY_SENTIMENT_COUNT = 25;
 
     public List<Tweet> getTweetFeed(TwitterSearch search) throws TwitterException {
         LocalDateTime now = now();
@@ -126,7 +126,7 @@ public class GraphService {
         LocalDate since = search.sinceDate(now);
         List<String> tweets = new ArrayList<>();
         while (!since.isAfter(now)) {
-            tweets.addAll(twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(),
+            tweets.addAll(twitter.searchPopularAndRecentTweets(search.getTerm(), search.getLanguage(),
                     since.atStartOfDay(), since.plusDays(1).atStartOfDay(), TWEET_DAILY_SENTIMENT_COUNT)
                     .stream().map(Tweet::getText).collect(toList()));
             since = since.plusDays(1);
@@ -148,6 +148,10 @@ public class GraphService {
             throw new EmptySentimentListException();
         }
         Map<Sentiment, BigDecimal> sentimentValues = meaningCloud.getSentimentsValues(texts, search.getLanguage());
+        if (emptySentiments(sentimentValues)) {
+            throw new EmptySentimentListException();
+        }
+
         BigDecimal total = ZERO;
         BigDecimal max = new BigDecimal(100);
         for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
@@ -165,6 +169,16 @@ public class GraphService {
             max = remaining;
         }
         return new SentimentAnalysisResult(texts.size(), sentimentValues);
+    }
+
+    private boolean emptySentiments(Map<Sentiment, BigDecimal> sentimentValues) {
+        for (Map.Entry<Sentiment, BigDecimal> entry : sentimentValues.entrySet())
+        {
+            if (entry.getValue().compareTo(ZERO) > 0) {
+                return false;
+            }
+        }
+        return true;
     }
     
     private List<SourceResponse> createSourceResponseFromMap(HashMap<String, Integer> map) {
