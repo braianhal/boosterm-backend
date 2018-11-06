@@ -58,7 +58,7 @@ public class GraphService {
     public Map<String, Integer> getPopularityValueInTimeForTweets(TwitterSearch search) throws TwitterException {
         LocalDate now = now().toLocalDate();
         LocalDate since = search.sinceDate(now);
-        HashMap<String, Integer> popularityMap = new HashMap<>();
+        LinkedHashMap<String, Integer> popularityMap = new LinkedHashMap<>();
         while (!since.isAfter(now)) {
             int dayPopularity = twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(),
                     since.atStartOfDay(), since.plusDays(1).atStartOfDay(), TWEET_POPULARITY_COUNT)
