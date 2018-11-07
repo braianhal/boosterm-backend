@@ -52,7 +52,7 @@ public class GraphService {
     public List<Tweet> getTweetFeed(TwitterSearch search) throws TwitterException {
         LocalDateTime now = now();
         LocalDateTime since = search.sinceDate(now);
-        return twitter.searchRelevantTweets(search.getTerm(), search.getLanguage(), since, now, TWEET_FEED_COUNT);
+        return twitter.searchPopularAndRecentTweets(search.getTerm(), search.getLanguage(), since, now, TWEET_FEED_COUNT);
     }
 
     public Map<String, Integer> getPopularityValueInTimeForTweets(TwitterSearch search) throws TwitterException {
