@@ -163,10 +163,12 @@ public class GraphService {
             BigDecimal percentage = entry.getValue().multiply(new BigDecimal(100)).divide(total, 1, HALF_UP);
             BigDecimal remaining = max.subtract(percentage);
             if (remaining.compareTo(ZERO) < 0) {
-                percentage = max;
+                sentimentValues.put(entry.getKey(), max);
+                max = ZERO;
+            } else {
+                sentimentValues.put(entry.getKey(), percentage);
+                max = remaining;
             }
-            sentimentValues.put(entry.getKey(), percentage);
-            max = remaining;
         }
         return new SentimentAnalysisResult(texts.size(), sentimentValues);
     }
