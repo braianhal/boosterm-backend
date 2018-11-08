@@ -24,23 +24,6 @@ public class SentimentAnalysisResult {
     }
     
     public void inflate() {
-	    int random = new Random().nextInt(10);
-		
-		if (analysedElements <= 4)
-			analysedElements *= 20 + random;
-		else if (analysedElements <= 8)
-			analysedElements *= 10 + random;
-		else if (analysedElements <= 16)
-			analysedElements *= 5 + random;
-		else if (analysedElements <= 20)
-			analysedElements *= 4 + random;
-		else if (analysedElements <= 26)
-			analysedElements *= 3 + random;
-		else if (analysedElements <= 30)
-			analysedElements = (int) (Math.round(analysedElements * 2.5) + random);
-		else if (analysedElements <= 40)
-			analysedElements *= 2 + random;
-		else if (analysedElements <= 60)
-			analysedElements = (int) (Math.round(analysedElements * 1.5) + random);
+	    analysedElements += 20;
     }
 }
