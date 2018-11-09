@@ -60,7 +60,7 @@ public class TwitterClient {
     }
 
     private Query getDefaultSearch(String text, String language, LocalDateTime limitSince, LocalDateTime limitTo, int quantity) {
-        Query query = new Query(text);
+        Query query = new Query(text + " -filter:retweets");
         query.setCount(quantity);
         query.setLang(language);
         query.setSince(Converter.toString(limitSince, DATE_LIMIT_FORMAT));
